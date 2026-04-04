@@ -1,3 +1,11 @@
+manage := python manage.py
+
 .PHONY: run
 run:
-	python manage.py runserver
+	${manage} runserver
+
+.PHONY: migrations apply-migrations
+migrations:
+	${manage} makemigrations
+apply-migrations:
+	${manage} migrate
