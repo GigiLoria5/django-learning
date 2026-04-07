@@ -12,6 +12,3 @@ wheels/
 # IDE
 .idea
 .run
-
-# Mock Data
-mockdata

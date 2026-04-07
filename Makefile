@@ -6,14 +6,16 @@ stop:
 prune: stop
 	docker system prune -a -f --volumes
 
-.PHONY: run db
-run:
-	${manage} runserver
-db: stop
-	docker-compose up --detach
-
 .PHONY: migrations apply-migrations
 migrations:
 	${manage} makemigrations
 apply-migrations:
 	${manage} migrate
+
+.PHONY: run db db-seeded
+run:
+	${manage} runserver
+db: stop
+	docker-compose up --detach
+db-seeded: db apply-migrations
+
