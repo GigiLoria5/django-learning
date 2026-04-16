@@ -1,6 +1,8 @@
 manage := python manage.py
 
-.PHONY: stop prune
+.PHONY: install stop prune
+install:
+	uv sync
 stop:
 	docker compose down --timeout 0 --remove-orphans
 prune: stop
