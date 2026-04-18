@@ -19,18 +19,21 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "description",
+            "slug",
+            "inventory",
             "unit_price",
             "price_with_tax",
             "collection",
-            "collection_link",
+            # "collection_link",
         ]
 
     price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
-    collection_link = serializers.HyperlinkedRelatedField(
-        queryset=Collection.objects.all(),
-        view_name="collection-detail",
-        source="collection",
-    )
+    # collection_link = serializers.HyperlinkedRelatedField(
+    #     queryset=Collection.objects.all(),
+    #     view_name="collection-detail",
+    #     source="collection",
+    # )
 
     @staticmethod
     def calculate_tax(product: Product) -> Decimal:
