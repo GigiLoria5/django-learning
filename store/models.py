@@ -1,3 +1,5 @@
+from typing import Final
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -21,6 +23,8 @@ class Collection(models.Model):
 
 
 class Product(models.Model):
+    RELATED_NAME: Final[str] = "products"
+
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField(blank=True)
@@ -29,7 +33,9 @@ class Product(models.Model):
     )
     inventory = models.IntegerField(validators=[MinValueValidator(1)])
     last_updated = models.DateTimeField(auto_now=True)
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection = models.ForeignKey(
+        Collection, on_delete=models.PROTECT, related_name=RELATED_NAME
+    )
     promotions = models.ManyToManyField(Promotion, blank=True)
 
 
@@ -61,13 +67,19 @@ class Customer(models.Model):
 
 
 class Address(models.Model):
+    RELATED_NAME: Final[str] = "addresses"
+
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    zip = models.CharField(max_length=255, null=True)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, related_name=RELATED_NAME
+    )
+    zip = models.CharField(max_length=255, blank=True)
 
 
 class Order(models.Model):
+    RELATED_NAME: Final[str] = "orders"
+
     PAYMENT_STATUS_PENDING = "P"
     PAYMENT_STATUS_COMPLETE = "C"
     PAYMENT_STATUS_FAILED = "F"
@@ -82,12 +94,20 @@ class Order(models.Model):
     payment_status = models.CharField(
         max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING
     )
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.PROTECT, related_name=RELATED_NAME
+    )
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    RELATED_NAME: Final[str] = "orderitems"
+
+    order = models.ForeignKey(
+        Order, on_delete=models.PROTECT, related_name=RELATED_NAME
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name=RELATED_NAME
+    )
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
@@ -97,6 +117,10 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    RELATED_NAME: Final[str] = "cartitems"
+
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name=RELATED_NAME)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name=RELATED_NAME
+    )
     quantity = models.PositiveSmallIntegerField()

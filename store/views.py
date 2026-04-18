@@ -24,7 +24,7 @@ def product_list(request: Request) -> Response:
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-@api_view(["GET", "PUT"])
+@api_view(["GET", "PUT", "DELETE"])
 def product_detail(request: Request, pk: str) -> Response:
     product = get_object_or_404(Product, pk=pk)
     if request.method == "GET":
@@ -35,6 +35,14 @@ def product_detail(request: Request, pk: str) -> Response:
         serialized_product.is_valid(raise_exception=True)
         serialized_product.save()
         return Response(serialized_product.data, status=status.HTTP_200_OK)
+    elif request.method == "DELETE":
+        if product.orderitems.count() > 0:
+            return Response(
+                {"error": "Product cannot be deleted because it is in an order."},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
