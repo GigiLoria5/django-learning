@@ -67,7 +67,7 @@ class CollectionAdmin(admin.ModelAdmin):
         return (
             super()
             .get_queryset(request)
-            .annotate(products_count=Count("product", distinct=True))
+            .annotate(products_count=Count("products", distinct=True))
         )
 
 
