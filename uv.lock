@@ -46,6 +46,7 @@ dependencies = [
     { name = "django" },
     { name = "django-debug-toolbar" },
     { name = "djangorestframework" },
+    { name = "drf-nested-routers" },
     { name = "psycopg", extra = ["binary"] },
 ]
 
@@ -60,6 +61,7 @@ requires-dist = [
     { name = "django", specifier = ">=6.0.3" },
     { name = "django-debug-toolbar", specifier = ">=6.3.0" },
     { name = "djangorestframework", specifier = ">=3.17.1" },
+    { name = "drf-nested-routers", specifier = ">=0.95.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.3" },
 ]
 
@@ -107,6 +109,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ca/d7/c016e69fac19ff8afdc89db9d31d9ae43ae031e4d1993b20aca179b8301a/djangorestframework-3.17.1.tar.gz", hash = "sha256:a6def5f447fe78ff853bff1d47a3c59bf38f5434b031780b351b0c73a62db1a5", size = 905742, upload-time = "2026-03-24T16:58:33.705Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/e1/2c516bdc83652b1a60c6119366ac2c0607b479ed05cd6093f916ca8928f8/djangorestframework-3.17.1-py3-none-any.whl", hash = "sha256:c3c74dd3e83a5a3efc37b3c18d92bd6f86a6791c7b7d4dff62bb068500e76457", size = 898844, upload-time = "2026-03-24T16:58:31.845Z" },
+]
+
+[[package]]
+name = "drf-nested-routers"
+version = "0.95.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "djangorestframework" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ff/b2/070908ccd41bd6f025f5507d7f6e50009abe8be48393cc697d159b539f0b/drf_nested_routers-0.95.0.tar.gz", hash = "sha256:815978f802e578fd7035c74040c104909cbe97615de89a275d77e928f4029891", size = 23318, upload-time = "2025-09-09T02:01:58.201Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3e/61/69d951a6e8031389f5feade38531432325019e1047b23d5c6036a86c5e8f/drf_nested_routers-0.95.0-py2.py3-none-any.whl", hash = "sha256:dd489c33d667aaa81383ffaa8c74781d2b353d8f0795716ae37fc59ee297b7c4", size = 36407, upload-time = "2025-09-09T02:01:56.999Z" },
 ]
 
 [[package]]
