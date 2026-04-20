@@ -119,7 +119,7 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    RELATED_NAME: Final[str] = "cartitems"
+    RELATED_NAME: Final[str] = "items"
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name=RELATED_NAME)
     product = models.ForeignKey(
