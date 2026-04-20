@@ -65,6 +65,42 @@ class CartItemSerializer(serializers.ModelSerializer):
         return Decimal(cart_item.quantity) * cart_item.product.unit_price
 
 
+class AddCartItemSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
+    product_id = serializers.IntegerField()
+
+    def validate_product_id(self, value):
+        if not Product.objects.filter(pk=value).exists():
+            raise serializers.ValidationError("Product does not exist.")
+        return value
+
+    def save(self, **kwargs):
+        cart_id = self.context["cart_id"]
+        product_id = self.validated_data["product_id"]
+        quantity = self.validated_data["quantity"]
+        try:
+            cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product_id)
+            cart_item.quantity += quantity
+            cart_item.save()
+            self.instance = cart_item
+        except CartItem.DoesNotExist:
+            cart_item = CartItem.objects.create(
+                cart_id=cart_id, product_id=product_id, quantity=quantity
+            )
+            self.instance = cart_item
+        return self.instance
+
+    class Meta:
+        model = CartItem
+        fields = ["id", "product_id", "quantity"]
+
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ["quantity"]
+
+
 class CartSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     items = CartItemSerializer(many=True, read_only=True)
