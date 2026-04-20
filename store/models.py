@@ -127,6 +127,9 @@ class CartItem(models.Model):
     )
     quantity = models.PositiveSmallIntegerField()
 
+    class Meta:
+        unique_together = ("cart", "product")
+
 
 class Review(models.Model):
     RELATED_NAME: Final[str] = "reviews"
