@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
-from store.models import Cart, CartItem, Collection, Product, Review
+from store.models import Cart, CartItem, Collection, Customer, Product, Review
 
 TAX_RATE = Decimal(1.22)
 
@@ -115,3 +115,11 @@ class CartSerializer(serializers.ModelSerializer):
         return Decimal(
             sum(item.quantity * item.product.unit_price for item in cart.items.all())
         )
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        model = Customer
+        fields = ["id", "user_id", "phone", "birth_date", "membership"]
