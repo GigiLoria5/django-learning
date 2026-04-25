@@ -7,7 +7,7 @@ from django.db import migrations
 
 def load_seed_sql():
     base_dir = Path(__file__).resolve().parent.parent.parent
-    sql_file = base_dir / "seed" / "store.sql"
+    sql_file = base_dir / "seed" / "products.sql"
     return sql_file.read_text()
 
 
