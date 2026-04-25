@@ -107,6 +107,9 @@ class Order(models.Model):
         Customer, on_delete=models.PROTECT, related_name=RELATED_NAME
     )
 
+    class Meta:
+        permissions = [("cancel_order", "Can cancel order")]
+
 
 class OrderItem(models.Model):
     RELATED_NAME: Final[str] = "orderitems"
