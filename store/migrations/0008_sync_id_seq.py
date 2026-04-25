@@ -13,9 +13,6 @@ class Migration(migrations.Migration):
         SELECT SETVAL('public.auth_group_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_group;
         SELECT SETVAL('public.auth_group_permissions_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_group_permissions;
         SELECT SETVAL('public.auth_permission_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_permission;
-        SELECT SETVAL('public.auth_user_groups_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_user_groups;
-        SELECT SETVAL('public.auth_user_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_user;
-        SELECT SETVAL('public.auth_user_user_permissions_id_seq', COALESCE(MAX(id), 1) ) FROM public.auth_user_user_permissions;
         SELECT SETVAL('public.django_admin_log_id_seq', COALESCE(MAX(id), 1) ) FROM public.django_admin_log;
         SELECT SETVAL('public.django_content_type_id_seq', COALESCE(MAX(id), 1) ) FROM public.django_content_type;
         SELECT SETVAL('public.django_migrations_id_seq', COALESCE(MAX(id), 1) ) FROM public.django_migrations;
@@ -30,7 +27,5 @@ class Migration(migrations.Migration):
         SELECT SETVAL('public.store_product_id_seq', COALESCE(MAX(id), 1) ) FROM public.store_product;
         SELECT SETVAL('public.store_product_promotions_id_seq', COALESCE(MAX(id), 1) ) FROM public.store_product_promotions;
         SELECT SETVAL('public.store_promotion_id_seq', COALESCE(MAX(id), 1) ) FROM public.store_promotion;
-        SELECT SETVAL('public.tags_tag_id_seq', COALESCE(MAX(id), 1) ) FROM public.tags_tag;
-        SELECT SETVAL('public.tags_taggeditem_id_seq', COALESCE(MAX(id), 1) ) FROM public.tags_taggeditem;
         """),
     ]
