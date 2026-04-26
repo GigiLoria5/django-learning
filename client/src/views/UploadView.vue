@@ -1,23 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useProductImageStore } from '@/stores/productImage'
+import BaseButton from '@/components/BaseButton.vue'
+import FileDropzone from '@/components/FileDropzone.vue'
 
 const store = useProductImageStore()
 const selectedFile = ref<File | null>(null)
 const PRODUCT_ID = 1
 
-function onFileChange(event: Event) {
-  const input = event.target as HTMLInputElement
-  selectedFile.value = input.files?.[0] ?? null
+function onFileChange(file: File | null) {
+  selectedFile.value = file
   store.reset()
 }
 
 async function handleUpload() {
   if (!selectedFile.value) return
   await store.uploadImage(PRODUCT_ID, selectedFile.value)
-  if (store.uploadStatus === 'success') {
-    selectedFile.value = null
-  }
+  if (store.uploadStatus === 'success') selectedFile.value = null
 }
 </script>
 
@@ -27,21 +26,7 @@ async function handleUpload() {
       <h1 class="text-2xl font-bold text-gray-900 mb-1">Product Image Upload</h1>
       <p class="text-sm text-gray-400 mb-6">Product #{{ PRODUCT_ID }}</p>
 
-      <!-- File picker -->
-      <label
-        class="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-8 cursor-pointer transition-colors mb-4"
-        :class="
-          selectedFile
-            ? 'border-indigo-500 bg-indigo-50 text-indigo-600'
-            : 'border-gray-200 text-gray-400 hover:border-indigo-400 hover:bg-indigo-50'
-        "
-      >
-        <input type="file" accept="image/*" class="hidden" @change="onFileChange" />
-        <span v-if="!selectedFile" class="text-sm">Click or drag an image here</span>
-        <span v-else class="text-sm font-medium break-all text-center">
-          📎 {{ selectedFile.name }}
-        </span>
-      </label>
+      <FileDropzone :modelFile="selectedFile" class="mb-4" @file-change="onFileChange" />
 
       <!-- Status messages -->
       <Transition
@@ -72,20 +57,9 @@ async function handleUpload() {
         </div>
       </Transition>
 
-      <!-- Upload button -->
-      <button
-        class="w-full py-3 rounded-xl text-sm font-semibold text-white transition-colors"
-        :class="
-          !selectedFile || store.isUploading
-            ? 'bg-indigo-300 cursor-not-allowed'
-            : 'bg-indigo-600 hover:bg-indigo-700'
-        "
-        :disabled="!selectedFile || store.isUploading"
-        @click="handleUpload"
-      >
-        <span v-if="store.isUploading">Uploading…</span>
-        <span v-else>Upload Image</span>
-      </button>
+      <BaseButton :loading="store.isUploading" :disabled="!selectedFile" @click="handleUpload">
+        Upload Image
+      </BaseButton>
     </div>
   </main>
 </template>
