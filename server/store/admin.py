@@ -24,9 +24,22 @@ class InventoryFilter(admin.SimpleListFilter):
         return queryset.filter(inventory__gte=100)
 
 
+class ProductImageInline(admin.TabularInline):
+    model = models.ProductImage
+    readonly_fields = ("thumbnail",)
+
+    def thumbnail(self, instance):
+        if instance.image.name != "":
+            return format_html(
+                '<img src="{}" width="50" height="50" />', instance.image.url
+            )
+        return ""
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = ["clear_inventory"]
+    inlines = [ProductImageInline]
     list_display = ("title", "unit_price", "inventory_status")
     list_editable = ("unit_price",)
     list_filter = ("collection", "last_updated", InventoryFilter)
