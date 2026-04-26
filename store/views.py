@@ -20,6 +20,7 @@ from store.models import (
     CartItem,
     Collection,
     Customer,
+    Order,
     OrderItem,
     Product,
     Review,
@@ -30,7 +31,9 @@ from store.serializers import (
     CartItemSerializer,
     CartSerializer,
     CollectionSerializer,
+    CreateOrderSerializer,
     CustomerSerializer,
+    OrderSerializer,
     ProductSerializer,
     ReviewSerializer,
     UpdateCartItemSerializer,
@@ -119,7 +122,9 @@ class CustomerViewSet(ModelViewSet):
     serializer_class = CustomerSerializer
     permission_classes = [IsAdminUser]
 
-    @action(detail=True, methods=["GET"], permission_classes=[ViewCustomerHistoryPermission])
+    @action(
+        detail=True, methods=["GET"], permission_classes=[ViewCustomerHistoryPermission]
+    )
     def history(self, request, pk):
         return Response("ok")
 
@@ -133,3 +138,31 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response(serializer.data)
+
+
+class OrderViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = CreateOrderSerializer(
+            data=request.data, context={"user_id": self.request.user.id}
+        )
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateOrderSerializer
+        return OrderSerializer
+
+    def get_queryset(self):
+        orders = Order.objects.prefetch_related(
+            f"{OrderItem.RELATED_NAME}__product"
+        ).all()
+        user = self.request.user
+        if user.is_staff:
+            return orders
+        customer_id, _ = Customer.objects.only("id").get_or_create(user_id=user.id)
+        return orders.filter(customer_id=customer_id)
