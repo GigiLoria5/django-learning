@@ -14,4 +14,4 @@ wheels/
 .run
 
 # Env
-.env
+server/.env
