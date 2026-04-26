@@ -162,3 +162,6 @@ DJOSER = {
 
 
 AUTH_USER_MODEL = "core.User"
+
+# Celery Configuration Options
+CELERY_BROKER_URL = "redis://localhost:6379/1"

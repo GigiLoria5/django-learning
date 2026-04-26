@@ -14,10 +14,12 @@ migrations:
 apply-migrations:
 	${manage} migrate
 
-.PHONY: run db db-seeded
+.PHONY: run db db-seeded celery
 run:
 	${manage} runserver
 db: stop
 	docker-compose up --detach
 db-seeded: db apply-migrations
+celery:
+	celery -A djangolearning worker -l INFO
 
