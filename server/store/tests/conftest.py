@@ -3,5 +3,5 @@ from rest_framework.test import APIClient
 
 
 @pytest.fixture(scope="session")
-def client() -> APIClient:
+def api_client() -> APIClient:
     return APIClient()

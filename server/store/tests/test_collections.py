@@ -1,13 +1,69 @@
+from collections.abc import Callable
+from typing import Any
+
 import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from core.models import User
+
+
+@pytest.fixture
+def create_collection(api_client: APIClient) -> Callable[..., Any]:
+    def do_create_collection(title: str) -> Any:
+        return api_client.post("/store/collections/", {"title": title})
+
+    return do_create_collection
+
+
+@pytest.fixture
+def authenticate(api_client: APIClient) -> Callable[..., None]:
+    def do_authenticate(is_staff: bool = False):
+        api_client.force_authenticate(user=(User(is_staff=is_staff)))
+
+    return do_authenticate
+
 
 @pytest.mark.django_db
 class TestCreateCollection:
-    BASE_URL = "/store/collections/"
-
-    def test_if_user_is_anonymous_returns_401(self, client: APIClient) -> None:
-        response = client.post(self.BASE_URL, {"title": "Test Collection"})
+    def test_if_user_is_anonymous_returns_401(
+        self, create_collection: Callable[..., Any]
+    ) -> None:
+        response = create_collection("a")
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_if_user_is_not_admin_returns_403(
+        self,
+        create_collection: Callable[..., Any],
+        authenticate: Callable[..., None],
+    ) -> None:
+        authenticate()
+
+        response = create_collection("a")
+
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_if_data_is_invalid_returns_400(
+        self,
+        create_collection: Callable[..., Any],
+        authenticate: Callable[..., None],
+    ) -> None:
+        authenticate(is_staff=True)
+
+        response = create_collection("")
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "title" in response.data
+
+    def test_if_data_is_valid_returns_201(
+        self,
+        create_collection: Callable[..., Any],
+        authenticate: Callable[..., None],
+    ) -> None:
+        authenticate(is_staff=True)
+
+        response = create_collection("a")
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data["id"] > 0

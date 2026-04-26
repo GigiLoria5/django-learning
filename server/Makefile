@@ -14,7 +14,7 @@ migrations:
 apply-migrations:
 	${manage} migrate
 
-.PHONY: run db db-seeded celery
+.PHONY: run db db-seeded celery test
 run:
 	${manage} runserver
 db: stop
@@ -22,4 +22,5 @@ db: stop
 db-seeded: db apply-migrations
 celery:
 	celery -A djangolearning worker -l INFO
-
+test:
+	uv run pytest
