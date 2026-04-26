@@ -22,6 +22,7 @@ from store.models import (
     Order,
     OrderItem,
     Product,
+    ProductImage,
     Review,
 )
 from store.permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
@@ -33,6 +34,7 @@ from store.serializers import (
     CreateOrderSerializer,
     CustomerSerializer,
     OrderSerializer,
+    ProductImageSerializer,
     ProductSerializer,
     ReviewSerializer,
     UpdateCartItemSerializer,
@@ -41,7 +43,7 @@ from store.serializers import (
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related(ProductImage.RELATED_NAME).all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
@@ -173,3 +175,13 @@ class OrderViewSet(ModelViewSet):
             return orders
         customer_id = Customer.objects.only("id").get(user_id=user.id)
         return orders.filter(customer_id=customer_id)
+
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs["product_pk"])
+
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs["product_pk"]}
