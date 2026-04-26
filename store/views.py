@@ -141,7 +141,7 @@ class CustomerViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    http_method_names = ["get", "head", "options", "patch", "delete"]
+    http_method_names = ["get", "post", "head", "options", "patch", "delete"]
 
     def get_permissions(self):
         if self.request.method in ["PATCH", "DELETE"]:

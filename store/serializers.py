@@ -13,6 +13,7 @@ from store.models import (
     Product,
     Review,
 )
+from store.signals import order_created
 
 TAX_RATE = Decimal(1.22)
 
@@ -183,6 +184,7 @@ class CreateOrderSerializer(serializers.Serializer):
             ]
             OrderItem.objects.bulk_create(order_items)
             Cart.objects.filter(pk=cart_id).delete()
+            order_created.send_robust(sender=self.__class__, order=order)
             return order
 
 
