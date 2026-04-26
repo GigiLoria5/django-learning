@@ -15,3 +15,6 @@ wheels/
 
 # Env
 server/.env
+
+# Media
+server/media/
