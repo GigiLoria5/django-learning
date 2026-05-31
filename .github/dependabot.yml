@@ -1,0 +1,87 @@
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/server"
+
+    schedule:
+      interval: "yearly"
+      time: "05:00"
+      timezone: "Europe/Rome"
+
+    assignees:
+      - "GigiLoria5"
+
+    labels:
+      - "dependencies"
+      - "python"
+
+    versioning-strategy: increase
+    rebase-strategy: disabled
+    open-pull-requests-limit: 5
+
+    groups:
+      be-runtime-minor-patch:
+        patterns:
+          - "django"
+          - "django-*"
+          - "djangorestframework"
+          - "djangorestframework-*"
+          - "djoser"
+          - "drf-*"
+          - "celery"
+          - "pillow"
+          - "psycopg*"
+          - "redis*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      be-django-major:
+        patterns:
+          - "django"
+          - "django-*"
+        update-types:
+          - "major"
+
+      be-drf-major:
+        patterns:
+          - "djangorestframework"
+          - "djangorestframework-*"
+          - "djoser"
+          - "drf-*"
+        update-types:
+          - "major"
+
+      be-celery-major:
+        patterns:
+          - "celery"
+        update-types:
+          - "major"
+
+      be-redis-major:
+        patterns:
+          - "redis*"
+        update-types:
+          - "major"
+
+      be-db-major:
+        patterns:
+          - "psycopg*"
+        update-types:
+          - "major"
+
+      be-dev-all:
+        patterns:
+          - "celery-types"
+          - "django-stubs"
+          - "djangorestframework-stubs"
+          - "model-bakery"
+          - "mypy"
+          - "mypy-extensions"
+          - "pytest"
+          - "pytest-*"
+          - "ruff"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
