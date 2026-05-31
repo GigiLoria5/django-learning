@@ -16,7 +16,7 @@ dependencies = [
     "drf-nested-routers>=0.95.0",
     "pillow>=12.2.0",
     "psycopg[binary]>=3.3.3",
-    "redis>=7.4.0",
+    "redis>=8.0.0",
 ]
 
 [dependency-groups]
